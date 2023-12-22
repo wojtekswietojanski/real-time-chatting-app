@@ -1,0 +1,21 @@
+@charset "UTF-8";
+.contacts .contactTemplate {
+  width: 400px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Zmieniamy kolejność kolumn */
+  grid-template-rows: repeat(2, 1fr);
+}
+.contacts .contactTemplate img {
+  height: 100%;
+  width: 100%;
+  grid-column: 1; /* Obraz zajmuje pierwszą kolumnę */
+  grid-row: 1/span 2; /* I rozciąga się na obie rzędy */
+}
+.contacts .contactTemplate .username {
+  grid-column: 2/span 3; /* Nazwa użytkownika zajmuje kolumny 2, 3 i 4 */
+  grid-row: 1; /* Na pierwszym rzędzie */
+}
+.contacts .contactTemplate .lastMessage {
+  grid-column: 2/span 3; /* Ostatnia wiadomość zajmuje kolumny 2, 3 i 4 */
+  grid-row: 2; /* Na drugim rzędzie */
+}/*# sourceMappingURL=contactTemplate.css.map */
