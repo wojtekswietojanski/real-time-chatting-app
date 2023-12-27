@@ -1,11 +1,12 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, connection } = require("mongoose");
 var cookieParser = require("cookie-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jsonWebToken = require("jsonwebtoken");
 const User = require("./modules/User.js");
+const ws = require("ws");
 
 const app = express();
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
 
+//rejestracja
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -30,6 +32,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
+//logowanie
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username: username });
@@ -58,6 +61,63 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//wylogowywanie
+app.post("/logout", (req, res) => {
+  res.cookie("token", "").json("ok");
+});
+
+//Sprawdzenie zalogowanie
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    jsonWebToken.verify(token, secretKey, {}, (error, info) => {
+      if (error) {
+        console.log("lipa");
+        throw error;
+      }
+      res.json(info);
+    });
+  }
+});
+
 mongoose.connect(process.env.MONGO_URL);
 
-app.listen(4000);
+//tworzenie websocket
+const server = app.listen(4000);
+const wss = new ws.WebSocketServer({ server });
+wss.on("connection", (connection, req) => {
+  const cookieHeader = req.headers.cookie;
+
+  if (cookieHeader) {
+    const token = cookieHeader
+      .split(";")
+      .find((str) => str.trim().startsWith("token="));
+    if (token) {
+      const tokenValue = token.split("=")[1].trim();
+      if (tokenValue) {
+        jsonWebToken.verify(tokenValue, secretKey, {}, (error, info) => {
+          if (error) {
+            throw error;
+          }
+          const { username, id } = info;
+          connection.username = username;
+          connection.userId = id;
+          [...wss.clients].forEach((client) => {
+            client.send(
+              JSON.stringify({
+                online: [...wss.clients].map((c) => ({
+                  username: c.username,
+                  userId: c.userId,
+                })),
+              })
+            );
+          });
+        });
+      }
+    } else {
+      console.log("brak token w cookies");
+    }
+  } else {
+    console.log("brak cookies w nagłówku");
+  }
+});

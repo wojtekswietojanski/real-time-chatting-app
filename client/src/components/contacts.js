@@ -1,15 +1,26 @@
+import React from "react";
 import "../styling/contactTemplate/contactTemplate.css";
 import foto from "../assets/userImg.png";
 
-const Contacts = () => {
+const Contacts = ({ peopleList }) => {
+  // Konwersja peopleList na mapę, jeśli peopleList to obiekt
+  const mappedPeopleList = Array.isArray(peopleList)
+    ? peopleList
+    : Object.keys(peopleList).map((userId) => ({
+        userId,
+        username: peopleList[userId],
+      }));
+
   return (
-    <aside className="contacts">
-      <div className="contactTemplate">
-        <img src={foto} alt="" />
-        <p className="username">Imie i nazwisko</p>
-        <p className="lastMessage">Ostatnia wiadomość</p>
-      </div>
-    </aside>
+    <section className="contacts">
+      {mappedPeopleList.map(({ userId, username }) => (
+        <div className="contactTemplate" key={userId}>
+          <img src={foto} alt="" />
+          <p className="username">{username}</p>
+          <p className="lastMessage">Ostatnia wiadomość</p>
+        </div>
+      ))}
+    </section>
   );
 };
 

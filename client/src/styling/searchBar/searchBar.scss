@@ -1,0 +1,11 @@
+#searchBarForm {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  #searchBarInput {
+    font-size: 18px;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid rgba(121, 6, 252, 0.281);
+  }
+}

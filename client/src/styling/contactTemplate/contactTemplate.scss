@@ -1,25 +1,35 @@
 .contacts {
+  width: 300px;
+  padding: 10px;
   .contactTemplate {
-    width: 400px;
+    margin-top: 10px;
+    width: 260px;
+    height: fit-content;
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Zmieniamy kolejność kolumn */
+    grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
 
     img {
       height: 100%;
       width: 100%;
-      grid-column: 1; /* Obraz zajmuje pierwszą kolumnę */
-      grid-row: 1 / span 2; /* I rozciąga się na obie rzędy */
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      filter: hue-rotate(-33deg);
     }
 
     .username {
-      grid-column: 2 / span 3; /* Nazwa użytkownika zajmuje kolumny 2, 3 i 4 */
-      grid-row: 1; /* Na pierwszym rzędzie */
+      grid-column: 2 / span 3;
+      grid-row: 1;
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
     }
 
     .lastMessage {
-      grid-column: 2 / span 3; /* Ostatnia wiadomość zajmuje kolumny 2, 3 i 4 */
-      grid-row: 2; /* Na drugim rzędzie */
+      grid-column: 2 / span 3;
+      grid-row: 2;
+      margin: 0;
     }
   }
 }

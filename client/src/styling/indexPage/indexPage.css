@@ -1,0 +1,23 @@
+main {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+}
+
+#leftAside {
+  min-height: 100vh;
+  width: -moz-fit-content;
+  width: fit-content;
+  position: sticky;
+  top: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px;
+}
+
+#chatSection {
+  background-color: white;
+  min-height: 100vh;
+  flex-grow: 1;
+}/*# sourceMappingURL=indexPage.css.map */
