@@ -1,10 +1,10 @@
 .contacts {
   width: 300px;
-  padding: 10px;
 }
 .contacts .contactTemplate {
+  padding: 5px;
   margin-top: 10px;
-  width: 260px;
+  width: calc(100% + 10px);
   height: -moz-fit-content;
   height: fit-content;
   display: grid;
@@ -30,4 +30,7 @@
   grid-column: 2/span 3;
   grid-row: 2;
   margin: 0;
+}
+.contacts .contactTemplate.highlithedComponent {
+  background-color: rgb(202, 202, 202);
 }/*# sourceMappingURL=contactTemplate.css.map */

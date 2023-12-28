@@ -17,4 +17,33 @@ main {
   background-color: white;
   min-height: 100vh;
   flex-grow: 1;
+  .yourMessage {
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: 10px;
+    width: fit-content;
+    font-size: 28px;
+    padding: 10px;
+    background-color: rgba(91, 21, 255, 0.959);
+    border-radius: 15px;
+    color: white;
+    right: 10px;
+  }
+
+  .notYourMessage {
+    margin-right: auto;
+    margin-left: 10px;
+    margin-top: 10px;
+    width: fit-content;
+    font-size: 28px;
+    padding: 10px;
+    background-color: rgba(240, 240, 240);
+    border-radius: 15px;
+    color: black;
+    right: 10px;
+  }
+
+  .messageDate {
+    font-size: 12px;
+  }
 }

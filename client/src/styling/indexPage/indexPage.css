@@ -20,4 +20,33 @@ main {
   background-color: white;
   min-height: 100vh;
   flex-grow: 1;
+}
+#chatSection .yourMessage {
+  margin-left: auto;
+  margin-right: 10px;
+  margin-top: 10px;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 28px;
+  padding: 10px;
+  background-color: rgba(91, 21, 255, 0.959);
+  border-radius: 15px;
+  color: white;
+  right: 10px;
+}
+#chatSection .notYourMessage {
+  margin-right: auto;
+  margin-left: 10px;
+  margin-top: 10px;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 28px;
+  padding: 10px;
+  background-color: rgb(240, 240, 240);
+  border-radius: 15px;
+  color: black;
+  right: 10px;
+}
+#chatSection .messageDate {
+  font-size: 12px;
 }/*# sourceMappingURL=indexPage.css.map */

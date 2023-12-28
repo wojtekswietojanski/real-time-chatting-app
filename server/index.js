@@ -1,11 +1,12 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const { default: mongoose, connection } = require("mongoose");
+const { default: mongoose } = require("mongoose");
 var cookieParser = require("cookie-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jsonWebToken = require("jsonwebtoken");
 const User = require("./modules/User.js");
+const Message = require("./modules/Messgae.js");
 const ws = require("ws");
 
 const app = express();
@@ -80,11 +81,39 @@ app.get("/profile", (req, res) => {
   }
 });
 
+//Odczytywanie wiadomości z bazy danych
+app.post("/getPost", async (req, res) => {
+  const { userReading, user2nd } = req.body;
+  if (userReading && user2nd) {
+    try {
+      console.log(userReading);
+      console.log(user2nd);
+      const conversation = await Message.find({
+        $or: [
+          { sender: userReading, recipient: user2nd },
+          { sender: user2nd, recipient: userReading },
+        ],
+      }).sort({ createdAt: 1 });
+      if (conversation) {
+        res.json(conversation);
+      } else {
+        res.json("no conversation");
+      }
+    } catch (error) {
+      console.error("Error fetching conversation:", error);
+      res.status(500).json({ error: "błąd przy odczycie z bazy danych" });
+    }
+  } else {
+    res.status(400).json({ error: "Invalid parameters" });
+  }
+});
+
 mongoose.connect(process.env.MONGO_URL);
 
 //tworzenie websocket
 const server = app.listen(4000);
 const wss = new ws.WebSocketServer({ server });
+
 wss.on("connection", (connection, req) => {
   const cookieHeader = req.headers.cookie;
 
@@ -102,16 +131,8 @@ wss.on("connection", (connection, req) => {
           const { username, id } = info;
           connection.username = username;
           connection.userId = id;
-          [...wss.clients].forEach((client) => {
-            client.send(
-              JSON.stringify({
-                online: [...wss.clients].map((c) => ({
-                  username: c.username,
-                  userId: c.userId,
-                })),
-              })
-            );
-          });
+          // Pokazywanie użytkowników online
+          broadcastOnlineUsers();
         });
       }
     } else {
@@ -120,4 +141,40 @@ wss.on("connection", (connection, req) => {
   } else {
     console.log("brak cookies w nagłówku");
   }
+
+  connection.on("message", async (message) => {
+    const parsedMessage = JSON.parse(message.toString());
+    const { recipient, text } = parsedMessage;
+
+    if (recipient && text) {
+      const messageDoc = await Message.create({
+        sender: connection.userId,
+        recipient: recipient,
+        text: text,
+      });
+      [...wss.clients]
+        .filter((client) => client.userId == recipient)
+        .forEach((c) => {
+          c.send(
+            JSON.stringify({
+              messageData: text,
+              sender: connection.userId,
+              id: messageDoc._id,
+            })
+          );
+        });
+    }
+  });
 });
+
+//Funkcja do przekazywania użytkowników online (dałem na zewnątrz connection event żeby było czytelniej)
+function broadcastOnlineUsers() {
+  const onlineUsers = [...wss.clients].map((client) => ({
+    username: client.username,
+    userId: client.userId,
+  }));
+
+  [...wss.clients].forEach((client) => {
+    client.send(JSON.stringify({ online: onlineUsers }));
+  });
+}
