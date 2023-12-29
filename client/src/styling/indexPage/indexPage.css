@@ -6,6 +6,7 @@ main {
 
 #leftAside {
   min-height: 100vh;
+  max-height: 100vh;
   width: -moz-fit-content;
   width: fit-content;
   position: sticky;
@@ -19,7 +20,12 @@ main {
 #chatSection {
   background-color: white;
   min-height: 100vh;
+  max-height: 100vh;
   flex-grow: 1;
+}
+#chatSection .messagesContainer {
+  height: calc(100vh - 100px);
+  overflow-y: scroll;
 }
 #chatSection .yourMessage {
   margin-left: auto;

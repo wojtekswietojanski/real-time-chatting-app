@@ -30,6 +30,8 @@
   grid-column: 2/span 3;
   grid-row: 2;
   margin: 0;
+  color: rgba(67, 233, 1, 0.842);
+  font-weight: 500;
 }
 .contacts .contactTemplate.highlithedComponent {
   background-color: rgb(202, 202, 202);

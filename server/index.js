@@ -86,8 +86,6 @@ app.post("/getPost", async (req, res) => {
   const { userReading, user2nd } = req.body;
   if (userReading && user2nd) {
     try {
-      console.log(userReading);
-      console.log(user2nd);
       const conversation = await Message.find({
         $or: [
           { sender: userReading, recipient: user2nd },
@@ -142,6 +140,7 @@ wss.on("connection", (connection, req) => {
     console.log("brak cookies w nagłówku");
   }
 
+  //obsługa wysyłania wiadomości
   connection.on("message", async (message) => {
     const parsedMessage = JSON.parse(message.toString());
     const { recipient, text } = parsedMessage;

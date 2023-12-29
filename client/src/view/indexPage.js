@@ -3,6 +3,7 @@ import SearchBar from "../components/searchBar";
 import NavButtons from "../components/navButtons";
 import SendMessageBar from "../components/sendMessageBar";
 import SelectUser from "../components/selectUser";
+import MessageNotification from "../components/messageNotification";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../userContext";
@@ -15,6 +16,8 @@ const IndexPage = () => {
   const [highligthedComponent, setHighligthedComponent] = useState("");
   const [messageContent, setMessageContent] = useState("");
   const [currentChat, setCurrentChat] = useState();
+  const [messageNotification, setMessageNotification] = useState(false);
+  const [searchUsers, setSearchUsers] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:4000/profile", {
@@ -26,7 +29,7 @@ const IndexPage = () => {
     );
   }, []);
 
-  //Wiadomościz webSocket
+  //Wiadomości z webSocket
   useEffect(() => {
     if (userInfo) {
       const ws = new WebSocket("ws://localhost:4000");
@@ -41,7 +44,23 @@ const IndexPage = () => {
       setPeopleList(showPeople(msg.online));
     }
     if ("messageData" in msg) {
-      console.log(msg.messageData);
+      const res = await fetch("http://localhost:4000/getPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userReading: userInfo.id,
+          user2nd: msg.sender,
+        }),
+      });
+      var response = await res.json();
+
+      if (response != { error: "błąd przy odczycie z bazy danych" }) {
+        setCurrentChat(response);
+        setHighligthedComponent(msg.sender);
+        setMessageNotification(true);
+      }
     }
   };
   // koniec wiadomości z websocket
@@ -68,6 +87,7 @@ const IndexPage = () => {
     });
     const response = await res.json();
     setCurrentChat(response);
+    setMessageNotification(false);
   };
 
   const handleSend = (event) => {
@@ -106,11 +126,12 @@ const IndexPage = () => {
       <aside id="leftAside">
         {userInfo && (
           <div>
-            <SearchBar />
+            <SearchBar setSearchUsers={setSearchUsers} />
             <Contacts
               peopleList={peopleList}
               handleHighlight={handleHighlight}
               highligthedComponent={highligthedComponent}
+              searchUsers={searchUsers}
             />
           </div>
         )}
@@ -120,29 +141,33 @@ const IndexPage = () => {
       <section id="chatSection">
         {highligthedComponent && (
           <>
+            {messageNotification && <MessageNotification />}
             <SendMessageBar
               handleSend={handleSend}
               messageContent={messageContent}
               setMessageContent={setMessageContent}
             />
-            {currentChat &&
-              currentChat.map((msg) =>
-                msg.sender === userInfo.id ? (
-                  <div key={msg._id} className="yourMessage">
-                    {msg.text}
-                    <div className="messageDate">
-                      {handleDate(msg.createdAt)}
+            <div className="messagesContainer">
+              {Array.isArray(currentChat) &&
+                currentChat.length > 0 &&
+                currentChat.map((msg) =>
+                  msg.sender === userInfo.id ? (
+                    <div key={msg._id} className="yourMessage">
+                      {msg.text}
+                      <div className="messageDate">
+                        {handleDate(msg.createdAt)}
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div key={msg._id} className="notYourMessage">
-                    {msg.text}
-                    <div className="messageDate">
-                      {handleDate(msg.createdAt)}
+                  ) : (
+                    <div key={msg._id} className="notYourMessage">
+                      {msg.text}
+                      <div className="messageDate">
+                        {handleDate(msg.createdAt)}
+                      </div>
                     </div>
-                  </div>
-                )
-              )}
+                  )
+                )}
+            </div>
           </>
         )}
         {!highligthedComponent && <SelectUser />}

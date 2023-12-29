@@ -3,7 +3,12 @@ import foto from "../assets/userImg.png";
 import { useState, useContext } from "react";
 import { UserContext } from "../userContext";
 
-const Contacts = ({ peopleList, handleHighlight, highligthedComponent }) => {
+const Contacts = ({
+  peopleList,
+  handleHighlight,
+  highligthedComponent,
+  searchUsers,
+}) => {
   const { userInfo } = useContext(UserContext);
 
   // Konwersja peopleList na mapę, jeśli peopleList to obiekt
@@ -15,9 +20,17 @@ const Contacts = ({ peopleList, handleHighlight, highligthedComponent }) => {
       }));
 
   // filtrowanie uzytkowników online tak aby nie było widać samego siebie
-  const filterMap = mappedPeopleList.filter(
-    (people) => people.username != userInfo.username
-  );
+  if (!searchUsers) {
+    var filterMap = mappedPeopleList.filter(
+      (people) => people.username != userInfo.username
+    );
+  } else {
+    var filterMap = mappedPeopleList
+      .filter((people) => people.username != userInfo.username)
+      .filter((searchedPeople) =>
+        searchedPeople.username.startsWith(searchUsers)
+      );
+  }
 
   return (
     <section className="contacts">
@@ -34,7 +47,7 @@ const Contacts = ({ peopleList, handleHighlight, highligthedComponent }) => {
         >
           <img src={foto} alt="" />
           <p className="username">{username}</p>
-          <p className="lastMessage">Ostatnia wiadomość</p>
+          <p className="lastMessage">Online</p>
         </div>
       ))}
     </section>
