@@ -7,5 +7,8 @@
     padding: 4px;
     border-radius: 10px;
     border: 1px solid rgba(121, 6, 252, 0.281);
+    @media (width < 800px) {
+      margin-left: 63px;
+    }
   }
 }

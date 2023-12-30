@@ -18,6 +18,7 @@ const IndexPage = () => {
   const [currentChat, setCurrentChat] = useState();
   const [messageNotification, setMessageNotification] = useState(false);
   const [searchUsers, setSearchUsers] = useState("");
+  const [ifActive, setIfActive] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:4000/profile", {
@@ -59,6 +60,7 @@ const IndexPage = () => {
       if (response != { error: "błąd przy odczycie z bazy danych" }) {
         setCurrentChat(response);
         setHighligthedComponent(msg.sender);
+        setIfActive(true);
         setMessageNotification(true);
       }
     }
@@ -75,6 +77,7 @@ const IndexPage = () => {
 
   const handleHighlight = async (id) => {
     setHighligthedComponent(id);
+    setIfActive(true);
     const res = await fetch("http://localhost:4000/getPost", {
       method: "POST",
       headers: {
@@ -90,17 +93,31 @@ const IndexPage = () => {
     setMessageNotification(false);
   };
 
-  const handleSend = (event) => {
+  const handleSend = async (event) => {
     event.preventDefault();
     try {
       if (highligthedComponent) {
-        ws.send(
+        await ws.send(
           JSON.stringify({
             recipient: highligthedComponent,
             text: messageContent,
           })
         );
         setMessageContent("");
+        //ponowne pobieranie wiadomości po przesłaniu
+        const res = await fetch("http://localhost:4000/getPost", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userReading: userInfo.id,
+            user2nd: highligthedComponent,
+          }),
+        });
+        const response = await res.json();
+        setCurrentChat(response);
+        setMessageNotification(false);
       } else {
         console.log("niepodkreślone");
       }
@@ -123,7 +140,7 @@ const IndexPage = () => {
 
   return (
     <main>
-      <aside id="leftAside">
+      <aside id="leftAside" className={ifActive ? "notActive" : ""}>
         {userInfo && (
           <div>
             <SearchBar setSearchUsers={setSearchUsers} />
@@ -138,9 +155,19 @@ const IndexPage = () => {
 
         <NavButtons />
       </aside>
-      <section id="chatSection">
+      <section id="chatSection" className={ifActive ? "active" : ""}>
         {highligthedComponent && (
           <>
+            <button
+              id="GoBackButton"
+              onClick={() => {
+                setIfActive(false);
+                setHighligthedComponent("");
+                setCurrentChat("");
+              }}
+            >
+              ↩️Go back
+            </button>
             {messageNotification && <MessageNotification />}
             <SendMessageBar
               handleSend={handleSend}

@@ -23,4 +23,10 @@
 #navButtons button:hover,
 #navButtons a:hover {
   background-color: rgba(91, 21, 255, 0.726);
+}
+@media (width < 800px) {
+  #navButtons button,
+  #navButtons a {
+    margin: auto;
+  }
 }/*# sourceMappingURL=navButtons.css.map */

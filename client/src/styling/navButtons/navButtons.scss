@@ -4,6 +4,7 @@
   padding: 10px;
   box-sizing: border-box;
   gap: 5px;
+
   button,
   a {
     width: 300px;
@@ -20,6 +21,9 @@
     text-align: center;
     &:hover {
       background-color: rgba(91, 21, 255, 0.726);
+    }
+    @media (width < 800px) {
+      margin: auto;
     }
   }
 }

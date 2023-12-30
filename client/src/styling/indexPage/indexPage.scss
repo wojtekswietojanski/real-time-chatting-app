@@ -13,13 +13,42 @@ main {
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px;
+  @media (width < 800px) {
+    width: 100%;
+  }
+  &.notActive {
+    @media (width < 800px) {
+      display: none;
+    }
+  }
 }
 #chatSection {
   background-color: white;
   min-height: 100vh;
   max-height: 100vh;
   flex-grow: 1;
-
+  @media (width < 800px) {
+    display: none;
+  }
+  &.active {
+    @media (width < 800px) {
+      display: block;
+    }
+  }
+  #GoBackButton {
+    display: none;
+    margin: auto;
+    margin-top: 5px;
+    font-size: 20px;
+    padding: 5px;
+    background-color: rgba(91, 21, 255, 0.959);
+    border-radius: 10px;
+    color: white;
+    @media (width < 800px) {
+      display: block;
+    }
+    border: none;
+  }
   .messagesContainer {
     height: calc(100vh - 100px);
     overflow-y: scroll;

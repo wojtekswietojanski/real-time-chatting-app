@@ -16,12 +16,48 @@ main {
   justify-content: space-between;
   border-right: 1px;
 }
+@media (width < 800px) {
+  #leftAside {
+    width: 100%;
+  }
+}
+@media (width < 800px) {
+  #leftAside.notActive {
+    display: none;
+  }
+}
 
 #chatSection {
   background-color: white;
   min-height: 100vh;
   max-height: 100vh;
   flex-grow: 1;
+}
+@media (width < 800px) {
+  #chatSection {
+    display: none;
+  }
+}
+@media (width < 800px) {
+  #chatSection.active {
+    display: block;
+  }
+}
+#chatSection #GoBackButton {
+  display: none;
+  margin: auto;
+  margin-top: 5px;
+  font-size: 20px;
+  padding: 5px;
+  background-color: rgba(91, 21, 255, 0.959);
+  border-radius: 10px;
+  color: white;
+  border: none;
+}
+@media (width < 800px) {
+  #chatSection #GoBackButton {
+    display: block;
+  }
 }
 #chatSection .messagesContainer {
   height: calc(100vh - 100px);

@@ -8,4 +8,9 @@
   padding: 4px;
   border-radius: 10px;
   border: 1px solid rgba(121, 6, 252, 0.281);
+}
+@media (width < 800px) {
+  #searchBarForm #searchBarInput {
+    margin-left: 63px;
+  }
 }/*# sourceMappingURL=searchBar.css.map */
