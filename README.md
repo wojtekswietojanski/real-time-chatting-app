@@ -5,6 +5,7 @@ Konwersacja z użytkownikiem
 ![image](https://github.com/wojtekswietojanski/real-time-chatting-app/assets/125148871/3673a447-a145-4607-91e6-e1144cc56b89)
 żądania sieciowe
 ![image](https://github.com/wojtekswietojanski/real-time-chatting-app/assets/125148871/f23c2eb2-011a-405d-9dae-278e62d271a1)
+
 Widok z urządzenia mobilnego
 
 ![image](https://github.com/wojtekswietojanski/real-time-chatting-app/assets/125148871/22c5cb08-cc51-43c1-a485-1be1a84f0c5b)
